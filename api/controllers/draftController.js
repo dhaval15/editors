@@ -38,7 +38,7 @@ exports.getDraft = (req, res) => {
 
     if (fs.existsSync(metadataFilePath)) {
       const metadata = JSON.parse(fs.readFileSync(metadataFilePath, 'utf8'));
-      res.json(metadata);
+      res.json({... metadata, id: draftId});
     } else {
       res.status(404).json({ error: 'Draft not found' });
     }
