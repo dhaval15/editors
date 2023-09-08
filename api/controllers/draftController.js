@@ -15,6 +15,7 @@ exports.listDrafts = (req, res) => {
           id: folderName,
           title: metadata.title,
           description: metadata.description,
+					scenes: metadata.scenes,
         };
       }
     });
