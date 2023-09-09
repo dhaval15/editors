@@ -14,6 +14,7 @@ import {
 import { Search, Plus, Settings } from 'react-feather'; // Import icons from the icon library
 import DraftApi from '../api/draftApi.ts';
 import AddDraftDialog from '../components/AddDraftDialog';
+import DraftTile from '../components/DraftTile';
 
 const Dashboard = () => {
   const [drafts, setDrafts] = useState([]);
@@ -24,13 +25,12 @@ const Dashboard = () => {
       setDrafts(res);
       setIsLoading(false);
 		});
-  });
+  }, []);
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 	const handleAddDraft = (({title, description}) => {
 		DraftApi.createDraft({title, description}).then((res) => {
-			console.log(res);
 			onClose();
 		});
 	});
@@ -73,20 +73,7 @@ const Dashboard = () => {
           <Text color="gray.600">Loading...</Text>
         ) : (
           drafts.map((draft) => (
-            <Box
-              key={draft.id}
-              bg="grey.100"
-              rounded="lg"
-              p={4}
-              position="relative"
-            >
-              <Heading size="md" fontWeight="semibold">
-                {draft.title}
-              </Heading>
-              <Text mt={2} color="gray.600" fontSize="18">
-                {draft.description}
-              </Text>
-            </Box>
+            <DraftTile key={draft.id} draft={draft}/>
           ))
         )}
       </VStack>

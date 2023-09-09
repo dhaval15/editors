@@ -53,3 +53,20 @@
 .open-dialog-button:hover {
   background-color: #0056b3;
 }
+
+.scroll::-webkit-scrollbar {
+   display: none;
+	 border: none;
+	 scrollbar-width: none;
+ }
+
+.faded {
+  /* z-index:100; */
+  opacity: 0.3;
+  -webkit-transition: opacity 1s; /* Safari */
+  transition: opacity 1s;
+}
+
+.faded:hover{
+  opacity: 1;
+}

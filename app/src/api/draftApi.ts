@@ -37,7 +37,7 @@ const DraftApi = {
   },
 
   // Fetch a specific draft by ID
-  getDraftById: async (id: string): Promise<Draft> => {
+  getDraft: async (id: string): Promise<Draft> => {
     try {
       const response: AxiosResponse<Draft> = await api.get(`/draft/${id}`);
       return response.data;
@@ -66,7 +66,7 @@ const DraftApi = {
   },
 
   // Fetch all scenes for a specific draft by ID
-  getAllScenesInDraft: async (id: string): Promise<Scene[]> => {
+  getAllScenes: async (id: string): Promise<Scene[]> => {
     try {
       const response: AxiosResponse<Scene[]> = await api.get(`/draft/${id}/scenes`);
       return response.data;
@@ -76,7 +76,7 @@ const DraftApi = {
   },
 
   // Fetch a specific scene by ID within a draft
-  getSceneInDraft: async (draftId: string, sceneId: string): Promise<Scene> => {
+  getScene: async (draftId: string, sceneId: string): Promise<Scene> => {
     try {
       const response: AxiosResponse<Scene> = await api.get(`/draft/${draftId}/scene/${sceneId}`);
       return response.data;
@@ -86,7 +86,7 @@ const DraftApi = {
   },
 
   // Create a new scene within a draft
-  createSceneInDraft: async (draftId: string, sceneData: { insert?: number; content: string }): Promise<string> => {
+  createScene: async (draftId: string, sceneData: { insert?: number; content: string }): Promise<string> => {
     try {
       const response: AxiosResponse<{ id: string }> = await api.post(`/draft/${draftId}/scenes`, sceneData);
       return response.data.id;
@@ -96,16 +96,16 @@ const DraftApi = {
   },
 
   // Update a specific scene within a draft
-  updateSceneInDraft: async (draftId: string, sceneId: string, sceneData: Scene): Promise<void> => {
+  updateScene: async (draftId: string, sceneId: string, content: string): Promise<void> => {
     try {
-      await api.put(`/draft/${draftId}/scene/${sceneId}`, sceneData);
+      await api.put(`/draft/${draftId}/scene/${sceneId}`, {content});
     } catch (error) {
       throw new Error(`Failed to update scene: ${error}`);
     }
   },
 
   // Delete a specific scene within a draft
-  deleteSceneInDraft: async (draftId: string, sceneId: string): Promise<void> => {
+  deleteScene: async (draftId: string, sceneId: string): Promise<void> => {
     try {
       await api.delete(`/draft/${draftId}/scene/${sceneId}`);
     } catch (error) {
