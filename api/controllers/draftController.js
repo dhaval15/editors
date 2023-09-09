@@ -31,6 +31,7 @@ exports.listDrafts = (req, res) => {
 
 exports.getDraft = (req, res) => {
   const draftId = req.params.id;
+  const deep = req.query.deep === 'true';
 
   try {
     const draftFolder = path.join(draftsFolder, draftId);
@@ -38,7 +39,26 @@ exports.getDraft = (req, res) => {
 
     if (fs.existsSync(metadataFilePath)) {
       const metadata = JSON.parse(fs.readFileSync(metadataFilePath, 'utf8'));
-      res.json({... metadata, id: draftId});
+      const sceneOrder = metadata.scenes || [];
+			if (!deep) {
+      	res.json({... metadata, id: draftId});
+			} else {
+				const scenes = sceneOrder.map((sceneId) => {
+					const sceneFilePath = path.join(draftFolder, `${sceneId}.scene`);
+					if (fs.existsSync(sceneFilePath)) {
+						return {
+							id: sceneId,
+							content: fs.readFileSync(sceneFilePath, 'utf8'),
+						};
+					}
+				});
+				res.json({
+					id: draftId,
+					title: metadata.title,
+					description: metadata.description,
+					scenes: scenes,
+				});
+			}
     } else {
       res.status(404).json({ error: 'Draft not found' });
     }

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Define the base URL for your API
-const BASE_URL = 'http://localhost:3030';
+const BASE_URL = 'https://code.dhaval.cloud/api';
 
 // Define TypeScript types for your data structures
 interface Draft {
@@ -37,9 +37,9 @@ const DraftApi = {
   },
 
   // Fetch a specific draft by ID
-  getDraft: async (id: string): Promise<Draft> => {
+  getDraft: async (id: string, deep: boolean = false): Promise<Draft> => {
     try {
-      const response: AxiosResponse<Draft> = await api.get(`/draft/${id}`);
+      const response: AxiosResponse<Draft> = await api.get(`/draft/${id}?deep=${deep}`);
       return response.data;
     } catch (error) {
       throw new Error(`Failed to fetch draft: ${error}`);
