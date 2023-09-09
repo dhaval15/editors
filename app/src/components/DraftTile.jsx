@@ -7,7 +7,7 @@ import {
 import { Link } from "react-router-dom";
 
 const DraftTile = ({ draft }) => {
-	const to = `edit/${draft.id}/${draft.scenes[0]}`;
+	const to = `draft/${draft.id}`;
 	return (
 		<Link to={to}>
 			<Box

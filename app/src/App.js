@@ -14,7 +14,6 @@ const router = createBrowserRouter([
   { path: "/", Component: DashboardPage },
   { path: "/draft/:id", Component: DraftPage },
   { path: "/draft/:id/edit", Component: EditScenePage },
-  { path: "/edit/:draftId/:sceneId", Component: EditScenePage },
 ]);
 
 function App() {

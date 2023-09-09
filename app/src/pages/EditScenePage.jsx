@@ -11,6 +11,7 @@ import {
 	IconButton,
 	CircularProgress,
 	ButtonGroup,
+	Heading,
 } from '@chakra-ui/react';
 
 import DraftApi from '../api/draftApi.ts';
@@ -18,21 +19,21 @@ import { useParams } from 'react-router-dom';
 import { Plus, Save, ArrowDown} from 'react-feather'; // Import icons from the icon library
 
 const EditScenePage = () => {
-	const {draftId} = useParams();
+	const {id} = useParams();
 	const [index, setIndex] = useState(0);
 	const [draft, setDraft] = useState(null);
 	const [scene, setScene] = useState(null);
 
 	useEffect(() => {
-		DraftApi.getDraft(draftId).then((res) => {
+		DraftApi.getDraft(id).then((res) => {
 			setDraft(res);
 		});
-	}, [draftId]);
+	}, [id]);
 
 	useEffect(() => {
 		if(draft != null) {
-			const id = draft.scenes[index];
-			DraftApi.getScene(draft.id, id).then((res) => {
+			const sceneId = draft.scenes[index];
+			DraftApi.getScene(draft.id, sceneId).then((res) => {
 				setScene(res);
 			});
 		}
@@ -71,6 +72,12 @@ const EditScenePage = () => {
 			<HotKeys keyMap={keyMap} handlers={handlers}>
 				<Flex direction="column" height="100vh">
 					<Flex justify="space-between" align="center" bg="white" px={8} py={4}>
+            <Heading 
+							style={{
+								color: 'grey',
+  							opacity: 0.2,
+							}} 
+							size="xl">{draft.title}</Heading>
 						<Spacer/>
 						<ButtonGroup >
 							<SceneToolbar
