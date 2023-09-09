@@ -46,7 +46,7 @@ const SceneToolbar = ({draft, index, setScene, setIndex}) => {
 				icon={<Save/>}
 				onClick={() => {
 					const content = localStorage.getItem('editorContent');
-					DraftApi.updateScene(draftId, id, content).then((res) => {
+					DraftApi.updateScene(draft.id, draft.scenes[index], content).then((res) => {
 						console.log('Saved successfully');
 					});
 				}}
