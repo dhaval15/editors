@@ -6,7 +6,7 @@ import {
   IconButton,
   HStack,
 } from '@chakra-ui/react';
-import { Clock, List, ChevronLeft, ChevronRight, Settings, Save } from 'react-feather';
+import { Plus, Clock, List, ChevronLeft, ChevronRight, Settings, Save } from 'react-feather';
 import DraftApi from '../api/draftApi.ts';
 
 const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
@@ -35,6 +35,14 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 			setIndex(index + 1);
 		}
 	};
+	const addScene = () => {
+		if (index < draft.scenes.length - 1){
+				setScene(null);
+				DraftApi.createScene(draft.id, {content: ''}).then((res) => {
+					setIndex(draft.scenes.length - 1);
+				});
+		}
+	}
 	const previousScene = () => {
 		if (index != 0){
 			setScene(null);
@@ -77,6 +85,7 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 				)}
         <Save size={12} onClick={save}/>
         <ChevronLeft size={12} onClick={previousScene}/>
+        <Plus size={12} onClick={addScene}/>
         <ChevronRight size={12} onClick={nextScene}/>
         <List size={12} onClick={openScenesPopup}/>
         <Settings size={12} onClick={openSettings}/>
