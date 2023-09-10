@@ -5,6 +5,7 @@ const port = process.env.PORT || 3030;
 
 app.use(express.json())
 app.use(cors())
+app.use(express.static('static'))
 
 const draftController = require('./controllers/draftController');
 
