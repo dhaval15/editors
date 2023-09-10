@@ -55,6 +55,7 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
       display="flex"
       justifyContent="space-between"
       alignItems="center"
+			shadow="lg"
 			style={{
   			opacity: isHovered ? 1 : 0.25,
   			transition: 'opacity 1s',
@@ -90,7 +91,9 @@ function getTimeAgoString(lastSavedTime) {
 	const currentTime = new Date();
 	const diffInSeconds = Math.floor((currentTime - lastSavedTime) / 1000);
 
-	if (diffInSeconds < 60) {
+	if (diffInSeconds == 0) {
+		return `Saved succesfully`;
+	} else if (diffInSeconds < 60) {
 		return `${diffInSeconds} seconds ago`;
 	} else if (diffInSeconds < 3600) {
 		const minutesAgo = Math.floor(diffInSeconds / 60);
