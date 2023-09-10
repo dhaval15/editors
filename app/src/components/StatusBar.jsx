@@ -11,6 +11,7 @@ import DraftApi from '../api/draftApi.ts';
 
 const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 	const [isHovered, setIsHovered] = useState(false);
+	const [lastSavedTime, setLastSavedTime] = useState(null);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -24,6 +25,7 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 		const content = localStorage.getItem('editorContent');
 		DraftApi.updateScene(draft.id, draft.scenes[index], content).then((res) => {
 			console.log('Saved successfully');
+			setLastSavedTime(new Date());
 		});
 	};
 	const openScenesPopup = () => {};
@@ -67,6 +69,11 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 				</HStack>
       </HStack>
       <HStack spacing={2}>
+				{(lastSavedTime && 
+					<Text fontSize={12}>
+						{getTimeAgoString(lastSavedTime)}
+        	</Text>
+				)}
         <Save size={12} onClick={save}/>
         <ChevronLeft size={12} onClick={previousScene}/>
         <ChevronRight size={12} onClick={nextScene}/>
@@ -76,6 +83,26 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
     </Box>
   );
 };
+
+function getTimeAgoString(lastSavedTime) {
+	if (!lastSavedTime) return 'Not saved yet';
+
+	const currentTime = new Date();
+	const diffInSeconds = Math.floor((currentTime - lastSavedTime) / 1000);
+
+	if (diffInSeconds < 60) {
+		return `${diffInSeconds} seconds ago`;
+	} else if (diffInSeconds < 3600) {
+		const minutesAgo = Math.floor(diffInSeconds / 60);
+		return `${minutesAgo} minute${minutesAgo > 1 ? 's' : ''} ago`;
+	} else if (diffInSeconds < 86400) {
+		const hoursAgo = Math.floor(diffInSeconds / 3600);
+		return `${hoursAgo} hour${hoursAgo > 1 ? 's' : ''} ago`;
+	} else {
+		const daysAgo = Math.floor(diffInSeconds / 86400);
+		return `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
+	}
+}
 
 const LiveClock = () => {
 	const [currentTime, setCurrentTime] = useState(getFormattedTime());
