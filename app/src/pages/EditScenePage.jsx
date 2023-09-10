@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import EditorConfigDialog from '../components/EditorConfigDialog';
 import Editor from '../components/Editor';
+import StatusBar from '../components/StatusBar';
 import SceneToolbar from '../components/SceneToolbar';
 import { HotKeys } from "react-hotkeys";
 import {
@@ -20,6 +21,7 @@ import { Plus, Save, ArrowDown} from 'react-feather'; // Import icons from the i
 
 const EditScenePage = () => {
 	const {id} = useParams();
+	const minimal = true;
 	const [index, setIndex] = useState(0);
 	const [draft, setDraft] = useState(null);
 	const [scene, setScene] = useState(null);
@@ -71,7 +73,7 @@ const EditScenePage = () => {
 		return (
 			<HotKeys keyMap={keyMap} handlers={handlers}>
 				<Flex direction="column" height="100vh">
-					<Flex justify="space-between" align="center" bg="white" px={8} py={4}>
+				{(!minimal && <Flex justify="space-between" align="center" bg="white" px={8} py={4}>
             <Heading 
 							style={{
 								color: 'grey',
@@ -88,14 +90,21 @@ const EditScenePage = () => {
 							/>
 							<EditorConfigDialog onSave={(c) => setConfig(c)} initialConfig={config}/>
 						</ButtonGroup>
-					</Flex>
-					<Box flex="1" display="flex" height="100%" pb={8}>
+					</Flex>)}
+					<Box flex="1" display="flex" height="100%" pb={minimal ? 0 : 8}>
 						<Editor 
 							config={config} 
 							initialContent={scene.content} 
 							onSave={onSave}
 							onChange={onChange}/>
 					</Box>
+					{(minimal && <StatusBar
+						draft={draft}
+						index={index}
+						count={400}
+						setIndex={setIndex}
+						setScene={setScene}
+					/>)}
 				</Flex>
 			</HotKeys>
 		)
