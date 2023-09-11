@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Define the base URL for your API
-const BASE_URL = 'api';
+const BASE_URL = '/api';
 
 // Define TypeScript types for your data structures
 interface Draft {
