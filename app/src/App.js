@@ -6,11 +6,11 @@ import DraftPage from './pages/DraftPage';
 import { ChakraProvider } from '@chakra-ui/react'
 
 import {
-  createBrowserRouter,
+  createHashRouter,
   RouterProvider,
 } from "react-router-dom";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   { path: "/", Component: DashboardPage },
   { path: "/draft/:id", Component: DraftPage },
   { path: "/draft/:id/edit", Component: EditScenePage },
