@@ -52,7 +52,7 @@ const DraftPage = () => {
 									border: 'none', 
 							}}>
                 <Heading size="lg" style={{textAlign: 'left'}}>Scene {index + 1}</Heading>
-                <Text>{scene.content}</Text>
+                <Text style={{whiteSpace: 'pre-wrap'}}>{scene.content}</Text>
               </Box>
             ))}
           </VStack>
