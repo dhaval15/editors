@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const draftsFolder = '/home/dhaval/drafts';
+const draftsFolder = '/drafts';
 
 exports.listDrafts = (req, res) => {
   try {
