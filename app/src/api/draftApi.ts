@@ -86,7 +86,7 @@ const DraftApi = {
   },
 
   // Create a new scene within a draft
-  createScene: async (draftId: string, sceneData: { insert?: number; content: string }): Promise<string> => {
+  createScene: async (draftId: string, sceneData: { insert?: number; content: string; title: string}): Promise<string> => {
     try {
       const response: AxiosResponse<{ id: string }> = await api.post(`/draft/${draftId}/scenes`, sceneData);
       return response.data.id;
@@ -96,9 +96,12 @@ const DraftApi = {
   },
 
   // Update a specific scene within a draft
-  updateScene: async (draftId: string, sceneId: string, content: string): Promise<void> => {
+  updateScene: async (
+		draftId: string,
+		sceneId: string, 
+		sceneData: {content?: string; title?: string}): Promise<void> => {
     try {
-      await api.put(`/draft/${draftId}/scene/${sceneId}`, {content});
+      await api.put(`/draft/${draftId}/scene/${sceneId}`, sceneData);
     } catch (error) {
       throw new Error(`Failed to update scene: ${error}`);
     }
