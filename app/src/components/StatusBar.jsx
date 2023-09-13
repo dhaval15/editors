@@ -23,7 +23,7 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 
 	const save = () => {
 		const content = localStorage.getItem('editorContent');
-		DraftApi.updateScene(draft.id, draft.scenes[index], content).then((res) => {
+		DraftApi.updateScene(draft.id, draft.scenes[index], {content}).then((res) => {
 			console.log('Saved successfully');
 			setLastSavedTime(new Date());
 		});
@@ -35,14 +35,14 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 			setIndex(index + 1);
 		}
 	};
+
 	const addScene = () => {
-		if (index < draft.scenes.length - 1){
-				setScene(null);
-				DraftApi.createScene(draft.id, {content: ''}).then((res) => {
-					setIndex(draft.scenes.length - 1);
-				});
-		}
-	}
+			setScene(null);
+			DraftApi.createScene(draft.id, {content: '', title: 'Untitled'}).then((res) => {
+				setIndex(draft.scenes.length - 1);
+			});
+	};
+
 	const previousScene = () => {
 		if (index != 0){
 			setScene(null);
@@ -50,7 +50,6 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 		}
 	};
 	const openSettings = () => {};
-	const newScene = () => {};
 
   return (
     <Box

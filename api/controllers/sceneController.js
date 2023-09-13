@@ -43,8 +43,11 @@ exports.getScene = (req, res) => {
     const sceneFilePath = path.join(draftFolder, `${sceneId}.scene`);
 
     if (fs.existsSync(sceneFilePath)) {
-      const content = fs.readFileSync(sceneFilePath, 'utf8');
-      res.json({ id: sceneId, content });
+      const data = fs.readFileSync(sceneFilePath, 'utf8');
+			const lines = data.split('\n');
+			const title = lines[0].trim();
+			const content = lines.slice(2).join('\n');
+      res.json({ id: sceneId, title, content });
     } else {
       res.status(404).json({ error: 'Scene not found' });
     }
@@ -57,14 +60,20 @@ exports.getScene = (req, res) => {
 exports.updateScene = (req, res) => {
   const draftId = req.params.id;
   const sceneId = req.params.sceneId;
-  const updatedContent = req.body.content;
 
   try {
     const draftFolder = path.join(draftsFolder, draftId);
     const sceneFilePath = path.join(draftFolder, `${sceneId}.scene`);
 
     if (fs.existsSync(sceneFilePath)) {
-      fs.writeFileSync(sceneFilePath, updatedContent, 'utf8');
+      const oldData = fs.readFileSync(sceneFilePath, 'utf8');
+			const lines = oldData.split('\n');
+			const oldTitle = lines[0].trim();
+			const oldContent = lines.slice(2).join('\n');
+  		const title = req.body.title ?? oldTitle;
+  		const content = req.body.content ?? oldContent;
+			const data = `${title}\n---\n${content.trim()}`
+      fs.writeFileSync(sceneFilePath, data, 'utf8');
       res.json({ message: 'Scene updated successfully' });
     } else {
       res.status(404).json({ error: 'Scene not found' });
@@ -107,6 +116,7 @@ exports.createScene = (req, res) => {
   const draftId = req.params.id;
   const insertPosition = req.body.insert;
   const sceneContent = req.body.content;
+	const title = req.body.title;
 
   try {
     const draftFolder = path.join(draftsFolder, draftId);
@@ -125,7 +135,8 @@ exports.createScene = (req, res) => {
       fs.writeFileSync(metadataFilePath, JSON.stringify(metadata, null, 2), 'utf8');
 
       const sceneFilePath = path.join(draftFolder, `${sceneId}.scene`);
-      fs.writeFileSync(sceneFilePath, sceneContent, 'utf8');
+			const data = `${title}\n---\n${sceneContent.trim()}`
+      fs.writeFileSync(sceneFilePath, data, 'utf8');
 
       res.status(201).json({ message: 'Scene created successfully', id: sceneId });
     } else {

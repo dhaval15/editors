@@ -46,9 +46,14 @@ exports.getDraft = (req, res) => {
 				const scenes = sceneOrder.map((sceneId) => {
 					const sceneFilePath = path.join(draftFolder, `${sceneId}.scene`);
 					if (fs.existsSync(sceneFilePath)) {
+						const data = fs.readFileSync(sceneFilePath, 'utf8');
+						const lines = data.split('\n');
+						const title = lines[0].trim();
+						const content = lines.slice(2).join('\n');
 						return {
 							id: sceneId,
-							content: fs.readFileSync(sceneFilePath, 'utf8'),
+							title,
+							content,
 						};
 					}
 				});
