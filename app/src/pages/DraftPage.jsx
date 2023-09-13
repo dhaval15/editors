@@ -51,7 +51,7 @@ const DraftPage = () => {
 									textAlign: 'justify',
 									border: 'none', 
 							}}>
-                <Heading size="lg" style={{textAlign: 'left'}}>Scene {index + 1}</Heading>
+                <Heading size="lg" style={{textAlign: 'left'}}>{scene.title}</Heading>
                 <Text style={{whiteSpace: 'pre-wrap'}}>{scene.content}</Text>
               </Box>
             ))}
