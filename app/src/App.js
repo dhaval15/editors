@@ -4,6 +4,8 @@ import DashboardPage from './pages/DashboardPage';
 import EditScenePage from './pages/EditScenePage';
 import DraftPage from './pages/DraftPage';
 import { ChakraProvider } from '@chakra-ui/react'
+import { Provider } from 'react-redux';
+import store from './store';
 
 import {
   createHashRouter,
@@ -20,7 +22,9 @@ function App() {
   const [selectedTheme] = useState('light');
 	return (
 		<ChakraProvider>
-			<RouterProvider router={router} />
+			<Provider store={store}>
+				<RouterProvider router={router} />
+			</Provider>
 		</ChakraProvider>
 	)
 }
