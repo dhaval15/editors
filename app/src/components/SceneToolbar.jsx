@@ -6,8 +6,22 @@ import {
 import DraftApi from '../api/draftApi.ts';
 import FadedButton from '../components/FadedButton';
 import { Plus, Save, ArrowUp, ArrowDown } from 'react-feather';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	setContent,
+	saveContentAsync,
+	nextScene,
+	previousScene,
+	selectWordCount,
+	selectTitle,
+} from '../reducers/editSceneReducer';
 
-const SceneToolbar = ({draft, index, setScene, setIndex}) => {
+const SceneToolbar = () => {
+	const dispatch = useDispatch();
+  const draft = useSelector((state) => state.editScene.draft);
+  const sceneIndex = useSelector((state) => state.editScene.sceneIndex);
+  const title = useSelector(selectTitle);
+  const wordCount = useSelector(selectWordCount);
 	const length = draft.scenes.length;
 	return (
 		<>
@@ -15,40 +29,30 @@ const SceneToolbar = ({draft, index, setScene, setIndex}) => {
 				label="Create New Scene"
 				icon={<Plus/>}
 				onClick={() => {
-					setScene(null);
-					DraftApi.createScene(draft.id, {content: ''}).then((res) => {
-						setIndex(draft.scenes.length - 1);
-					});
+					// setScene(null);
+					// DraftApi.createScene(draft.id, {content: ''}).then((res) => {
+					// 	setIndex(draft.scenes.length - 1);
+					// });
 				}}
 			/>
 			<FadedButton
 				label="Prev Scene"
 				icon={<ArrowUp/>}
-				onClick={() => {
-					if (index != 0){
-						setScene(null);
-						setIndex(index - 1);
-					}
-				}}
+				onClick={() => dispatch(previousScene())}
 			/>
 			<FadedButton
 				label="Next Scene"
 				icon={<ArrowDown/>}
-				onClick={() => {
-					if (index < draft.scenes.length - 1){
-						setScene(null);
-						setIndex(index + 1);
-					}
-				}}
+				onClick={() => dispatch(nextScene())}
 			/>
 			<FadedButton
 				label="Save"
 				icon={<Save/>}
 				onClick={() => {
-					const content = localStorage.getItem('editorContent');
-					DraftApi.updateScene(draft.id, draft.scenes[index], content).then((res) => {
-						console.log('Saved successfully');
-					});
+					// const content = localStorage.getItem('editorContent');
+					// DraftApi.updateScene(draft.id, draft.scenes[index], content).then((res) => {
+					// 	console.log('Saved successfully');
+					// });
 				}}
 			/>
 		</>

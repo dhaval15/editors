@@ -7,11 +7,25 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { Plus, Clock, List, ChevronLeft, ChevronRight, Settings, Save } from 'react-feather';
-import DraftApi from '../api/draftApi.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	setContent,
+	saveContentAsync,
+	nextScene,
+	previousScene,
+	createSceneAsync,
+	selectWordCount,
+	selectTitle,
+} from '../reducers/editSceneReducer';
 
-const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
+const StatusBar = () => {
+	const dispatch = useDispatch();
+  const title = useSelector(selectTitle);
+  const sceneIndex = useSelector((state) => state.editScene.sceneIndex);
+  const wordCount = useSelector(selectWordCount);
 	const [isHovered, setIsHovered] = useState(false);
 	const [lastSavedTime, setLastSavedTime] = useState(null);
+	const status = useSelector((state) => state.editScene.status);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -21,34 +35,13 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
     setIsHovered(false);
   };
 
-	const save = () => {
-		const content = localStorage.getItem('editorContent');
-		DraftApi.updateScene(draft.id, draft.scenes[index], {content}).then((res) => {
-			console.log('Saved successfully');
-			setLastSavedTime(new Date());
-		});
+	const save = async () => {
+		await dispatch(saveContentAsync());
+		setLastSavedTime(new Date());
 	};
+
 	const openScenesPopup = () => {};
-	const nextScene = () => {
-		if (index < draft.scenes.length - 1){
-			setScene(null);
-			setIndex(index + 1);
-		}
-	};
 
-	const addScene = () => {
-			setScene(null);
-			DraftApi.createScene(draft.id, {content: '', title: 'Untitled'}).then((res) => {
-				setIndex(draft.scenes.length - 1);
-			});
-	};
-
-	const previousScene = () => {
-		if (index != 0){
-			setScene(null);
-			setIndex(index - 1);
-		}
-	};
 	const openSettings = () => {};
 
   return (
@@ -69,23 +62,24 @@ const StatusBar = ({ draft, index, count, setIndex, setScene}) => {
 			}}
     >
       <HStack alignItems="center" spacing={4}>
-        <Text fontSize={12}>{draft.title} >> Scene {index + 1}</Text>
-        <Text fontSize={12}>Word Count: {count}</Text>
+        <Text fontSize={12}>{title}</Text>
+        <Text fontSize={12}>Word Count: {wordCount}</Text>
 				<HStack>
 					<Clock size={12} />
 					<LiveClock/>
 				</HStack>
       </HStack>
       <HStack spacing={2}>
+				<Text> {status} </Text>
 				{(lastSavedTime && 
 					<Text fontSize={12}>
 						{getTimeAgoString(lastSavedTime)}
         	</Text>
 				)}
         <Save size={12} onClick={save}/>
-        <ChevronLeft size={12} onClick={previousScene}/>
-        <Plus size={12} onClick={addScene}/>
-        <ChevronRight size={12} onClick={nextScene}/>
+        <ChevronLeft size={12} onClick={() => { dispatch(previousScene); }}/>
+        <Plus size={12} onClick={() => { dispatch(createSceneAsync); }}/>
+        <ChevronRight size={12} onClick={() => dispatch(nextScene)}/>
         <List size={12} onClick={openScenesPopup}/>
         <Settings size={12} onClick={openSettings}/>
       </HStack>

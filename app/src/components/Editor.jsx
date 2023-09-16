@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Textarea } from '@chakra-ui/react';
 import debounce from 'lodash/debounce';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	setContent,
+} from '../reducers/editSceneReducer';
 
-const Editor = ({ config, initialContent, onSave, onChange}) => {
-	const TYPING_INTERVAL = 5000;
+const Editor = ({ config }) => {
+	const dispatch = useDispatch();
+	const TYPING_INTERVAL = 2000;
   const { fontSize, lineHeight, fontFace, horizontalPadding, verticalPadding, textAlign} = config;
 
   const textareaStyle = {
@@ -18,17 +23,18 @@ const Editor = ({ config, initialContent, onSave, onChange}) => {
 		pb: horizontalPadding,
 	}
 
-  const [content, setContent] = useState(initialContent);
+  const content = useSelector((state) => state.editScene.content);
+  const [liveContent, setLiveContent] = useState(content ?? '');
 
 	const debouncedSave = React.useRef(
 		debounce((text) => {
-			onSave(text);
+			dispatch(setContent(text));
 		}, TYPING_INTERVAL)
 	).current;
 
   const handleContentChange = (e) => {
-    setContent(e.target.value);
 		debouncedSave(e.target.value);
+    setLiveContent(e.target.value);
   };
 
 	React.useEffect(() => {
@@ -41,9 +47,9 @@ const Editor = ({ config, initialContent, onSave, onChange}) => {
 
   return (
 		<Textarea
-      value={content}
+      value={liveContent}
       onChange={handleContentChange}
-			class="scroll"
+			className="scroll"
 			placeholder="Start typing here ..."
       style={{
 				fontSize: fontSize,
