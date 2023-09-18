@@ -35,11 +35,6 @@ const StatusBar = () => {
     setIsHovered(false);
   };
 
-	const save = async () => {
-		await dispatch(saveContentAsync());
-		setLastSavedTime(new Date());
-	};
-
 	const openScenesPopup = () => {};
 
 	const openSettings = () => {};
@@ -76,10 +71,10 @@ const StatusBar = () => {
 						{getTimeAgoString(lastSavedTime)}
         	</Text>
 				)}
-        <Save size={12} onClick={save}/>
-        <ChevronLeft size={12} onClick={() => { dispatch(previousScene); }}/>
-        <Plus size={12} onClick={() => { dispatch(createSceneAsync); }}/>
-        <ChevronRight size={12} onClick={() => dispatch(nextScene)}/>
+        <Save size={12} onClick={() => dispatch(saveContentAsync())}/>
+        <ChevronLeft size={12} onClick={() => dispatch(previousScene())}/>
+        <Plus size={12} onClick={() => dispatch(createSceneAsync())}/>
+        <ChevronRight size={12} onClick={() => dispatch(nextScene())}/>
         <List size={12} onClick={openScenesPopup}/>
         <Settings size={12} onClick={openSettings}/>
       </HStack>
