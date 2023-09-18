@@ -28,7 +28,6 @@ const Editor = ({ config }) => {
   const index = useSelector((state) => state.editScene.sceneIndex);
   const [liveContent, setLiveContent] = useState('');
 	useEffect(() => {
-		console.log(index);
 		setLiveContent(content);
 	}, [index]);
 

@@ -102,16 +102,15 @@ const editSceneSlice = createSlice({
       })
       .addCase(saveContentAsync.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.message = action.error.message;
       })
       .addCase(createSceneAsync.pending, (state) => {
         state.status = 'pending';
       })
       .addCase(createSceneAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-				state.sceneIndex = action.index;
-        state.draft.scenes.splice(state.sceneIndex, 0, action.id);
-				console.log(state.draft.scenes);
+				state.sceneIndex = action.payload.index;
+        state.draft.scenes.splice(state.sceneIndex, 0, action.payload.id);
         state.draft = {
 					... state.draft,
 					scenes: state.draft.scenes,
@@ -150,7 +149,7 @@ export const selectCurrentSceneContent = (state) => {
 	const draft = state.editScene.draft;
 	const sceneIndex = state.editScene.sceneIndex;
 	if (draft != null && sceneIndex != null) {
-		return draft.scenes[sceneIndex].content;
+		return draft.scenes[sceneIndex].content ?? '';
 	}
 	return null;
 }
