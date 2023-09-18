@@ -19,14 +19,14 @@ export const saveContentAsync = createAsyncThunk('editScene/saveContent', async 
 		const response = await DraftApi.updateScene(draft.id, sceneId, {content});
 		return response;
 	}
-  throw 'Inconsistent State';
+  throw 'Already up to date';
 });
 
 export const createSceneAsync = createAsyncThunk('editScene/createScene', async (_, thunkApi) => {
 	const state = thunkApi.getState().editScene;
 	const content = state.content;
 	if (content != null) {
-		throw 'Save content before creating a new scene';
+		throw 'Unsaved content';
 	}
 	const draft = state.draft;
 	const sceneIndex = state.sceneIndex;
@@ -52,12 +52,18 @@ const editSceneSlice = createSlice({
 	},
 	reducers: {
 		nextScene: (state, action) => {
-			if (state.sceneIndex < state.draft.scenes.length - 1){
+			if (state.content != null) {
+				state.message = 'Unsaved content';
+			}
+			else if (state.sceneIndex < state.draft.scenes.length - 1){
 				state.sceneIndex++;
 			}
 		},
 		previousScene: (state, action) => {
-			if (state.sceneIndex != 0){
+			if (state.content != null) {
+				state.message = 'Unsaved content';
+			}
+			else if (state.sceneIndex != 0){
 				state.sceneIndex--;
 			}
 		},
@@ -65,12 +71,16 @@ const editSceneSlice = createSlice({
 			state.content = action.payload;
 			localStorage.setItem('editorContent', state.content); 
 		},
+		clearMessage: (state, action) => {
+			state.message = null;
+		},
 		clear: (state, action) => {
 			state.draft = null;
 			state.sceneIndex = null;
 			state.content = null;
 			localStorage.setItem('editorContent', null);
 			state.lastSave = null;
+			state.message = null;
 		},
 	},
   extraReducers: (builder) => {
@@ -85,7 +95,7 @@ const editSceneSlice = createSlice({
       })
       .addCase(fetchDraftAsync.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.message = action.error.message;
       })
       .addCase(saveContentAsync.pending, (state) => {
         state.status = 'pending';
@@ -118,7 +128,7 @@ const editSceneSlice = createSlice({
       })
       .addCase(createSceneAsync.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.message = action.error.message;
       });
 	},
 });
@@ -159,6 +169,7 @@ export const {
 	setContent,
 	nextScene,
 	previousScene,
+	clearMessage,
 } = editSceneSlice.actions;
 
 export default editSceneSlice.reducer;

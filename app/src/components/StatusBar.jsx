@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { Plus, Clock, List, ChevronLeft, ChevronRight, Settings, Save } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '@chakra-ui/react'
 import {
 	setContent,
 	saveContentAsync,
@@ -16,6 +17,7 @@ import {
 	createSceneAsync,
 	selectWordCount,
 	selectTitle,
+	clearMessage,
 } from '../reducers/editSceneReducer';
 
 const StatusBar = () => {
@@ -25,7 +27,6 @@ const StatusBar = () => {
   const wordCount = useSelector(selectWordCount);
 	const [isHovered, setIsHovered] = useState(false);
 	const [lastSavedTime, setLastSavedTime] = useState(null);
-	const status = useSelector((state) => state.editScene.status);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -65,7 +66,7 @@ const StatusBar = () => {
 				</HStack>
       </HStack>
       <HStack spacing={2}>
-				<Text> {status} </Text>
+				<ToastContainer/>
 				{(lastSavedTime && 
 					<Text fontSize={12}>
 						{getTimeAgoString(lastSavedTime)}
@@ -129,5 +130,31 @@ const LiveClock = () => {
 		<Text fontSize={12}>{currentTime}</Text>
 	)
 };
+
+const ToastContainer = () => {
+	const toast = useToast();
+	const dispatch = useDispatch();
+	const message = useSelector((state) => state.editScene.message);
+	const id = 'message-id';
+	useEffect(() => {
+		if (message != null && !toast.isActive(id))
+			toast({
+				id,
+				title: message,
+				position: 'top-right',
+				status: 'warning',
+				variant: 'subtle',
+				duration: 3000,
+				isClosable: true,
+				onCloseComplete: () => dispatch(clearMessage()),
+			});
+	}, [toast, message]);
+
+	return (
+		<>
+		</>
+	)
+};
+
 
 export default StatusBar;
