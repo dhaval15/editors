@@ -29,13 +29,14 @@ import {
 const EditScenePage = () => {
 	const {id} = useParams();
 	const dispatch = useDispatch();
+	const [loaded, setLoaded] = useState(false);
   const minimal = useSelector((state) => state.editScene.minimal);
   const title = useSelector(selectTitle);
-	const status = useSelector((state) => state.editScene.status);
-  const error = useSelector((state) => state.editScene.error);
 
   useEffect(() => {
-		dispatch(fetchDraftAsync(id));
+		dispatch(fetchDraftAsync(id)).then((_) => {
+			setLoaded(true);
+		});
   }, [id]);
 
 	const [config, setConfig] = useState({
@@ -58,7 +59,7 @@ const EditScenePage = () => {
 		},
 	};
 
-	if (status == 'succeeded')
+	if (loaded)
 		return (
 			<HotKeys keyMap={keyMap} handlers={handlers}>
 				<Flex direction="column" height="100vh">
@@ -82,19 +83,6 @@ const EditScenePage = () => {
 				</Flex>
 			</HotKeys>
 		)
-	if (status == 'failed')
-		return (
-			<Box
-				style={{
-					display: 'flex',
-					justifyContent: 'center',
-					alignItems: 'center',
-					height: '100vh',
-				}}>
-				<Text> {error} </Text>
-			</Box>
-		)
-
 	return (
 		<Box
 			style={{
