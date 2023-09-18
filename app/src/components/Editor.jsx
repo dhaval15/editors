@@ -27,6 +27,7 @@ const Editor = ({ config }) => {
   const content = useSelector(selectCurrentSceneContent);
   const index = useSelector((state) => state.editScene.sceneIndex);
   const [liveContent, setLiveContent] = useState('');
+
 	useEffect(() => {
 		setLiveContent(content);
 	}, [index]);
@@ -48,6 +49,47 @@ const Editor = ({ config }) => {
 		};
 	}, [debouncedSave]);
 
+	const textareaRef = React.useRef(null);
+
+	useEffect(() => {
+		const dash = "-";
+		const emdash = "—"; // Shift+Option+Hyphen
+		const element = textareaRef.current;
+    
+    if (!element) return;
+ 
+		element.addEventListener( "keydown", handleKeydown, false );
+ 
+		function handleKeydown( event ) {
+ 
+			var target = event.target;
+ 
+			if ( event.key !== dash ) {
+ 
+				return;
+ 
+			}
+ 
+			var offset = target.selectionStart;
+			console.log('Emdash');
+ 
+			if ( target.value[ offset - 1 ] === dash ) {
+ 
+				event.preventDefault();
+ 
+				var beforeDash = target.value.slice( 0, ( offset - 1 ) );
+				var afterDash = target.value.slice( offset );
+ 
+				target.value = ( beforeDash + emdash + afterDash );
+ 
+				target.selectionStart = offset;
+				target.selectionEnd = offset;
+ 
+			}
+ 
+		}
+	}, []);
+
 
 
   return (
@@ -56,6 +98,7 @@ const Editor = ({ config }) => {
       onChange={handleContentChange}
 			className="scroll"
 			placeholder="Start typing here ..."
+			ref={textareaRef}
       style={{
 				fontSize: fontSize,
 				lineHeight: lineHeight,
