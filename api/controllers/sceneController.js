@@ -74,7 +74,11 @@ exports.updateScene = (req, res) => {
   		const content = req.body.content ?? oldContent;
 			const data = `${title}\n---\n${content.trim()}`
       fs.writeFileSync(sceneFilePath, data, 'utf8');
-      res.json({ message: 'Scene updated successfully' });
+      res.json({
+				id: sceneId,
+				title,
+				content,
+			});
     } else {
       res.status(404).json({ error: 'Scene not found' });
     }
