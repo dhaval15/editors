@@ -22,10 +22,10 @@ export const saveContentAsync = createAsyncThunk('editScene/saveContent', async 
   throw 'Inconsistent State';
 });
 
-export const createSceneAsync = createAsyncThunk('editScene/createScene', async ({ getState }) => {
-	const state = getState();
+export const createSceneAsync = createAsyncThunk('editScene/createScene', async (_, thunkApi) => {
+	const state = thunkApi.getState().editScene;
 	const content = state.content;
-	if (content == null) {
+	if (content != null) {
 		throw 'Save content before creating a new scene';
 	}
 	const draft = state.draft;
@@ -45,8 +45,9 @@ const editSceneSlice = createSlice({
   initialState: {
 		draft: null,
 		sceneIndex: null,
-		content: localStorage.getItem('editorContent') ?? null,
+		content: null,
 		minimal: true,
+		contentUpdated: true,
 		lastSave: null,
 	},
 	reducers: {
@@ -62,7 +63,7 @@ const editSceneSlice = createSlice({
 		},
 		setContent: (state, action) => {
 			state.content = action.payload;
-			localStorage.setItem('editorContent', state.content);
+			localStorage.setItem('editorContent', state.content); 
 		},
 		clear: (state, action) => {
 			state.draft = null;
@@ -81,7 +82,6 @@ const editSceneSlice = createSlice({
         state.status = 'succeeded';
         state.draft = action.payload;
 				state.sceneIndex = 0;
-				state.content = state.draft.scenes[state.sceneIndex].content;
       })
       .addCase(fetchDraftAsync.rejected, (state, action) => {
         state.status = 'failed';
@@ -92,7 +92,13 @@ const editSceneSlice = createSlice({
       })
       .addCase(saveContentAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.data = action.payload;
+				state.content = null;
+        state.draft.scenes[state.sceneIndex] = action.payload;
+        state.draft = {
+					... state.draft,
+					scenes: state.draft.scenes,
+				};
+				//state.lastSave = new Date();
       })
       .addCase(saveContentAsync.rejected, (state, action) => {
         state.status = 'failed';
@@ -105,6 +111,7 @@ const editSceneSlice = createSlice({
         state.status = 'succeeded';
 				state.sceneIndex = action.index;
         state.draft.scenes.splice(state.sceneIndex, 0, action.id);
+				console.log(state.draft.scenes);
         state.draft = {
 					... state.draft,
 					scenes: state.draft.scenes,
@@ -135,6 +142,15 @@ export const selectCurrentScene = (state) => {
 	const sceneIndex = state.editScene.sceneIndex;
 	if (draft != null && sceneIndex != null) {
 		return draft.scenes[sceneIndex];
+	}
+	return null;
+}
+
+export const selectCurrentSceneContent = (state) => {
+	const draft = state.editScene.draft;
+	const sceneIndex = state.editScene.sceneIndex;
+	if (draft != null && sceneIndex != null) {
+		return draft.scenes[sceneIndex].content;
 	}
 	return null;
 }

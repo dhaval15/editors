@@ -4,6 +4,7 @@ import debounce from 'lodash/debounce';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	setContent,
+  selectCurrentSceneContent,
 } from '../reducers/editSceneReducer';
 
 const Editor = ({ config }) => {
@@ -23,8 +24,13 @@ const Editor = ({ config }) => {
 		pb: horizontalPadding,
 	}
 
-  const content = useSelector((state) => state.editScene.content);
-  const [liveContent, setLiveContent] = useState(content ?? '');
+  const content = useSelector(selectCurrentSceneContent);
+  const index = useSelector((state) => state.editScene.sceneIndex);
+  const [liveContent, setLiveContent] = useState('');
+	useEffect(() => {
+		console.log(index);
+		setLiveContent(content);
+	}, [index]);
 
 	const debouncedSave = React.useRef(
 		debounce((text) => {
