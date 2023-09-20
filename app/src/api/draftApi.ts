@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Define the base URL for your API
-const BASE_URL = '/api';
+//const BASE_URL = '/api';
+const BASE_URL = 'http://localhost:3030/api';
 
 // Define TypeScript types for your data structures
 interface Draft {
@@ -101,7 +102,8 @@ const DraftApi = {
 		sceneId: string, 
 		sceneData: {content?: string; title?: string}): Promise<void> => {
     try {
-      await api.put(`/draft/${draftId}/scene/${sceneId}`, sceneData);
+      const response = await api.put(`/draft/${draftId}/scene/${sceneId}`, sceneData);
+			return response.data;
     } catch (error) {
       throw new Error(`Failed to update scene: ${error}`);
     }

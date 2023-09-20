@@ -9,19 +9,20 @@ import {
 } from '@chakra-ui/react';
 import { useParams, Link } from 'react-router-dom';
 import { Edit2 } from 'react-feather';
-import DraftApi from '../api/draftApi.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchDraftAsync,
+} from '../reducers/draftReducer';
 
 const DraftPage = () => {
+	const dispatch = useDispatch();
+  const draft = useSelector((state) => state.draft.data);
+  const status = useSelector((state) => state.draft.status);
   const { id } = useParams();
   const theme = useTheme();
-  const [draft, setDraft] = useState(null);
 
   useEffect(() => {
-    DraftApi.getDraft(id, true)
-      .then((res) => {
-        setDraft(res);
-      })
-      .catch((error) => console.error(error));
+		dispatch(fetchDraftAsync(id));
   }, [id]);
 
 	return (

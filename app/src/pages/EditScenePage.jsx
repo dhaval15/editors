@@ -18,28 +18,26 @@ import {
 import DraftApi from '../api/draftApi.ts';
 import { useParams } from 'react-router-dom';
 import { Plus, Save, ArrowDown} from 'react-feather'; // Import icons from the icon library
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getCurrentScene,
+	setContent,
+	fetchDraftAsync,
+	selectTitle,
+} from '../reducers/editSceneReducer';
 
 const EditScenePage = () => {
 	const {id} = useParams();
-	const minimal = true;
-	const [index, setIndex] = useState(0);
-	const [draft, setDraft] = useState(null);
-	const [scene, setScene] = useState(null);
+	const dispatch = useDispatch();
+	const [loaded, setLoaded] = useState(false);
+  const minimal = useSelector((state) => state.editScene.minimal);
+  const title = useSelector(selectTitle);
 
-	useEffect(() => {
-		DraftApi.getDraft(id).then((res) => {
-			setDraft(res);
+  useEffect(() => {
+		dispatch(fetchDraftAsync(id)).then((_) => {
+			setLoaded(true);
 		});
-	}, [id]);
-
-	useEffect(() => {
-		if(draft != null) {
-			const sceneId = draft.scenes[index];
-			DraftApi.getScene(draft.id, sceneId).then((res) => {
-				setScene(res);
-			});
-		}
-	}, [draft, index]);
+  }, [id]);
 
 	const [config, setConfig] = useState({
 		verticalPadding: 32,
@@ -49,14 +47,6 @@ const EditScenePage = () => {
 		textAlign: 'justify',
 		fontFace: 'Baskerville',
 	});
-	const onSave = (content) => {
-		//Save to server;
-		localStorage.setItem('editorContent', content);
-	};
-	const onChange = (content) => {
-		//Save to local storage;
-		localStorage.setItem('editorContent', content);
-	};
 
 	const keyMap = {
 		TEST: 'alt+g'
@@ -69,7 +59,7 @@ const EditScenePage = () => {
 		},
 	};
 
-	if (draft && scene)
+	if (loaded)
 		return (
 			<HotKeys keyMap={keyMap} handlers={handlers}>
 				<Flex direction="column" height="100vh">
@@ -79,32 +69,17 @@ const EditScenePage = () => {
 								color: 'grey',
   							opacity: 0.2,
 							}} 
-							size="xl">{draft.title}</Heading>
+							size="xl">{title}</Heading>
 						<Spacer/>
 						<ButtonGroup >
-							<SceneToolbar
-								draft={draft}
-								setScene={setScene}
-								index={index}
-								setIndex={setIndex}
-							/>
+							<SceneToolbar/>
 							<EditorConfigDialog onSave={(c) => setConfig(c)} initialConfig={config}/>
 						</ButtonGroup>
 					</Flex>)}
 					<Box flex="1" display="flex" height="100%" pb={minimal ? 0 : 8}>
-						<Editor 
-							config={config} 
-							initialContent={scene.content} 
-							onSave={onSave}
-							onChange={onChange}/>
+						<Editor config={config}/>
 					</Box>
-					{(minimal && <StatusBar
-						draft={draft}
-						index={index}
-						count={400}
-						setIndex={setIndex}
-						setScene={setScene}
-					/>)}
+					{(minimal && <StatusBar/>)}
 				</Flex>
 			</HotKeys>
 		)

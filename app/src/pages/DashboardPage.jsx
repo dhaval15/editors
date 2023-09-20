@@ -12,25 +12,31 @@ import {
   IconButton, // Import IconButton from Chakra UI
 } from '@chakra-ui/react';
 import { Search, Plus, Settings } from 'react-feather'; // Import icons from the icon library
-import DraftApi from '../api/draftApi.ts';
 import AddDraftDialog from '../components/AddDraftDialog';
 import DraftTile from '../components/DraftTile';
 
-const Dashboard = () => {
-  const [drafts, setDrafts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchDraftsAsync,
+  createDraftAsync,
+  updateDraftAsync,
+  deleteDraftAsync,
+} from '../reducers/draftsReducer';
 
-  useEffect(() => {
-		DraftApi.getAllDrafts().then((res) => {
-      setDrafts(res);
-      setIsLoading(false);
-		});
-  }, []);
+const Dashboard = () => {
+	const dispatch = useDispatch();
+  const drafts = useSelector((state) => state.drafts.data);
+  const status = useSelector((state) => state.drafts.status);
+  const error = useSelector((state) => state.drafts.error);
+	
+	useEffect(() => {
+    dispatch(fetchDraftsAsync());
+  }, [dispatch]);
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 	const handleAddDraft = (({title, description}) => {
-		DraftApi.createDraft({title, description}).then((res) => {
+		dispatch(createDraftAsync({title, description})).then((res) => {
 			onClose();
 		});
 	});
@@ -69,13 +75,9 @@ const Dashboard = () => {
       </Flex>
 
       <VStack spacing={4} align="stretch" mt={4}>
-        {isLoading ? (
-          <Text color="gray.600">Loading...</Text>
-        ) : (
-          drafts.map((draft) => (
+        {drafts.map((draft) => (
             <DraftTile key={draft.id} draft={draft}/>
-          ))
-        )}
+          ))}
       </VStack>
     </Box>
   );
