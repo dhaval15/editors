@@ -19,11 +19,11 @@ WORKDIR /app/app
 # Copy the React app package.json and package-lock.json
 COPY app/package*.json ./
 
-# Copy the React source code
-COPY app/ .
-
 # Install React app dependencies
 RUN npm install
+
+# Copy the React source code
+COPY app/ .
 
 # Build the React app
 RUN npm run build
