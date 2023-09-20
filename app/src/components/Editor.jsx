@@ -7,6 +7,11 @@ import {
   selectCurrentSceneContent,
 } from '../reducers/editSceneReducer';
 
+import LookupDialog from './LookupDialog';
+import { 
+	setSearchTerm
+} from '../reducers/lookupReducer';
+
 const Editor = ({ config }) => {
 	const dispatch = useDispatch();
 	const TYPING_INTERVAL = 2000;
@@ -51,6 +56,11 @@ const Editor = ({ config }) => {
 
 	const textareaRef = React.useRef(null);
 
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openDialog = () => setIsDialogOpen(true);
+  const closeDialog = () => setIsDialogOpen(false);
+
 	useEffect(() => {
 		const dash = "-";
 		const emdash = "—"; // Shift+Option+Hyphen
@@ -61,59 +71,76 @@ const Editor = ({ config }) => {
 		element.addEventListener( "keydown", handleKeydown, false );
  
 		function handleKeydown( event ) {
- 
-			var target = event.target;
- 
-			if ( event.key !== dash ) {
- 
-				return;
- 
-			}
- 
-			var offset = target.selectionStart;
-			console.log('Emdash');
- 
-			if ( target.value[ offset - 1 ] === dash ) {
- 
+
+			if (event.key === 'w' && event.altKey) {
+				const selection = window.getSelection();
+				if (selection) {
+					const target = event.target;
+					const text = target.value.slice(target.selectionStart, target.selectionEnd);
+					dispatch(setSearchTerm(text.trim()));
+				}
+        openDialog();
+      } else if (event.key === 'Escape') {
+        closeDialog();
 				event.preventDefault();
+      } else if (event.key === 'Escape') {
+
+      } else {
  
-				var beforeDash = target.value.slice( 0, ( offset - 1 ) );
-				var afterDash = target.value.slice( offset );
- 
-				target.value = ( beforeDash + emdash + afterDash );
- 
-				target.selectionStart = offset;
-				target.selectionEnd = offset;
- 
+				var target = event.target;
+	 
+				if ( event.key !== dash ) {
+	 
+					return;
+	 
+				}
+	 
+				var offset = target.selectionStart;
+	 
+				if ( target.value[ offset - 1 ] === dash ) {
+	 
+					event.preventDefault();
+	 
+					var beforeDash = target.value.slice( 0, ( offset - 1 ) );
+					var afterDash = target.value.slice( offset );
+	 
+					target.value = ( beforeDash + emdash + afterDash );
+	 
+					target.selectionStart = offset;
+					target.selectionEnd = offset;
+				}
 			}
- 
 		}
 	}, []);
 
 
 
   return (
-		<Textarea
-      value={liveContent}
-      onChange={handleContentChange}
-			className="scroll"
-			placeholder="Start typing here ..."
-			ref={textareaRef}
-      style={{
-				fontSize: fontSize,
-				lineHeight: lineHeight,
-				fontFamily: fontFace,
-				padding: `${verticalPadding}px ${horizontalPadding}px`,
-				width: '100%', // Full width
-				height: '100%', // Full height
-				boxSizing: 'border-box',
-				textAlign: textAlign
-			}}
-			variant='unstyled'
-      resize="none" 
-      size="md" 
-			{... padding}
-    />
+		<>
+			<Textarea
+				autoFocus
+				value={liveContent}
+				onChange={handleContentChange}
+				className="scroll"
+				placeholder="Start typing here ..."
+				ref={textareaRef}
+				style={{
+					fontSize: fontSize,
+					lineHeight: lineHeight,
+					fontFamily: fontFace,
+					padding: `${verticalPadding}px ${horizontalPadding}px`,
+					width: '100%', // Full width
+					height: '100%', // Full height
+					boxSizing: 'border-box',
+					textAlign: textAlign
+				}}
+				variant='unstyled'
+				resize="none" 
+				size="md" 
+				{... padding}
+			/>
+			<LookupDialog isOpen={isDialogOpen} onClose={closeDialog} />
+		</>
   );
 };
 

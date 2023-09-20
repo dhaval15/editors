@@ -2,6 +2,7 @@ import { configureStore, getDefaultMiddleware, applyMiddleware } from '@reduxjs/
 import draftsReducer from './reducers/draftsReducer';
 import draftReducer from './reducers/draftReducer';
 import editSceneReducer from './reducers/editSceneReducer';
+import lookupReducer from './reducers/lookupReducer';
 
 const logger = store => next => action => {
   console.log('dispatching', action)
@@ -15,6 +16,7 @@ const store = configureStore({
     drafts: draftsReducer,
     draft: draftReducer,
     editScene: editSceneReducer,
+    lookup: lookupReducer,
   },
   middleware: [
 		... getDefaultMiddleware(), 

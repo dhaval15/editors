@@ -134,7 +134,12 @@ const editSceneSlice = createSlice({
 });
 
 export const selectWordCount = (state) => {
-	return 300;
+	const content = state.editScene.content ?? selectCurrentSceneContent(state);
+	if (content == null)
+		return 0;
+  const words = content.trim().split(/\s+/);
+  const wordCount = words.length;
+  return wordCount;
 }
 
 export const selectTitle = (state) => {
