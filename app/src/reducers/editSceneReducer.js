@@ -75,13 +75,19 @@ const editSceneSlice = createSlice({
 			state.message = null;
 		},
 		clear: (state, action) => {
-			state.draft = null;
-			state.sceneIndex = null;
-			state.content = null;
-			localStorage.setItem('editorContent', null);
-			state.lastSave = null;
-			state.message = null;
-		},
+			if (state.content == null) {
+				state.draft = null;
+				state.sceneIndex = null;
+				state.content = null;
+				localStorage.setItem('editorContent', null);
+				state.lastSave = null;
+				state.message = null;
+				action.payload();
+			}
+			else {
+				state.message = 'Unsaved content';
+			}
+		}
 	},
   extraReducers: (builder) => {
     builder
@@ -175,6 +181,7 @@ export const {
 	nextScene,
 	previousScene,
 	clearMessage,
+	clear,
 } = editSceneSlice.actions;
 
 export default editSceneSlice.reducer;

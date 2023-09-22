@@ -8,11 +8,11 @@ import { Provider } from 'react-redux';
 import store from './store';
 
 import {
-  createHashRouter,
+  createMemoryRouter,
   RouterProvider,
 } from "react-router-dom";
 
-const router = createHashRouter([
+const router = createMemoryRouter([
   { path: "/", Component: DashboardPage },
   { path: "/draft/:id", Component: DraftPage },
   { path: "/draft/:id/edit", Component: EditScenePage },
