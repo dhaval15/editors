@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useParams, Link } from 'react-router-dom';
 import { Edit2 } from 'react-feather';
+import SceneSection from '../components/SceneSection'
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchDraftAsync,
@@ -45,16 +46,9 @@ const DraftPage = () => {
 
           <VStack spacing={12} mt={4} align='stretch'>
             {draft.scenes.map((scene, index) => (
-              <Box 
-								key={index} 
-								style={{
-									fontSize: '32px',
-									textAlign: 'justify',
-									border: 'none', 
-							}}>
-                <Heading size="lg" style={{textAlign: 'left'}}>{scene.title}</Heading>
-                <Text style={{whiteSpace: 'pre-wrap'}}>{scene.content}</Text>
-              </Box>
+              <SceneSection 
+								index={index} 
+								scene={scene}/>
             ))}
           </VStack>
         </>
