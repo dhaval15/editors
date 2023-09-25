@@ -9,7 +9,8 @@ import {
 
 import LookupDialog from './LookupDialog';
 import { 
-	setSearchTerm
+	setSearchTerm,
+	reverseLookup,
 } from '../reducers/lookupReducer';
 
 const Editor = ({ config }) => {
@@ -78,6 +79,7 @@ const Editor = ({ config }) => {
 					const target = event.target;
 					const text = target.value.slice(target.selectionStart, target.selectionEnd);
 					dispatch(setSearchTerm(text.trim()));
+      		dispatch(reverseLookup());
 				}
         openDialog();
       } else if (event.key === 'Escape') {
