@@ -32,7 +32,7 @@ import {
 
 const EditScenePage = () => {
 	const {id} = useParams();
-	const index = useLocation().state.index;
+	const index = useLocation().state?.index;
 	const dispatch = useDispatch();
 	const [loaded, setLoaded] = useState(false);
   const minimal = useSelector((state) => state.editScene.minimal);
