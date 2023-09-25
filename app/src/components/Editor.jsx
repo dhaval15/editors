@@ -13,6 +13,18 @@ import {
 	reverseLookup,
 } from '../reducers/lookupReducer';
 
+const mappings = {
+	'm': 'ml',
+	's': 'rel_syn',
+	'a': 'rel_ant',
+	'k': 'rel_spc',
+	'g': 'rel_gen',
+	'c': 'rel_com',
+	'p': 'rel_par',
+	'x': 'rel_jjb',
+	'h': 'rel_hom',
+};
+
 const Editor = ({ config }) => {
 	const dispatch = useDispatch();
 	const TYPING_INTERVAL = 2000;
@@ -72,16 +84,18 @@ const Editor = ({ config }) => {
 		element.addEventListener( "keydown", handleKeydown, false );
  
 		function handleKeydown( event ) {
-
-			if (event.key === 'w' && event.altKey) {
-				const selection = window.getSelection();
-				if (selection) {
-					const target = event.target;
-					const text = target.value.slice(target.selectionStart, target.selectionEnd);
-					dispatch(setSearchTerm(text.trim()));
-      		dispatch(reverseLookup());
+			if (event.altKey) {
+				const queryType = mappings[event.key]
+				if (queryType) {
+					const selection = window.getSelection();
+					if (selection) {
+						const target = event.target;
+						const text = target.value.slice(target.selectionStart, target.selectionEnd);
+						dispatch(setSearchTerm({type: queryType, query: text.trim()}));
+						dispatch(reverseLookup());
+					}
+					openDialog();
 				}
-        openDialog();
       } else if (event.key === 'Escape') {
         closeDialog();
 				event.preventDefault();
