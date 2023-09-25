@@ -55,7 +55,7 @@ const editSceneSlice = createSlice({
 			if (state.content != null) {
 				state.message = 'Unsaved content';
 			}
-			else if (action.payload < state.draft.scenes.length - 1){
+			else if (action.payload < state.draft.scenes.length){
 				state.sceneIndex = action.payload;
 			}
 		},
