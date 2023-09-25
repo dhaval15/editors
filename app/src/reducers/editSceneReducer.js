@@ -51,6 +51,14 @@ const editSceneSlice = createSlice({
 		lastSave: null,
 	},
 	reducers: {
+		setIndex: (state, action) => {
+			if (state.content != null) {
+				state.message = 'Unsaved content';
+			}
+			else if (action.payload < state.draft.scenes.length - 1){
+				state.sceneIndex = action.payload;
+			}
+		},
 		nextScene: (state, action) => {
 			if (state.content != null) {
 				state.message = 'Unsaved content';
@@ -177,6 +185,7 @@ export const selectCurrentSceneContent = (state) => {
 
 export const {
 	setDraft, 
+	setIndex,
 	setContent,
 	nextScene,
 	previousScene,

@@ -7,6 +7,9 @@ import {
   Flex,
 	useTheme,
 } from '@chakra-ui/react';
+import {
+  Link,
+} from "react-router-dom";
 
 const SceneSection = ({index, scene}) => {
 	const [isExpanded, setExpanded] = useState(false);
@@ -18,13 +21,18 @@ const SceneSection = ({index, scene}) => {
 				textAlign: 'justify',
 				border: 'none', 
 		}}>
-			<Heading 
-				size="lg" 
-				onClick={() => {setExpanded(!isExpanded)}}
-				style={{textAlign: 'left'}}>
-				{scene.title}
-			</Heading>
-			{(isExpanded && <Text style={{whiteSpace: 'pre-wrap'}}>{scene.content}</Text>)}
+			<Flex> 
+				<Heading 
+					size="md" 
+					onClick={() => {setExpanded(!isExpanded)}}
+					style={{textAlign: 'left'}}>
+					⦿ {scene.title}
+				</Heading>
+				{(isExpanded && <Link to='edit' state={{index: index}}> 
+					<Text> edit </Text>
+				</Link>)}
+			</Flex>
+			{(isExpanded && <Text pl={5} style={{whiteSpace: 'pre-wrap'}}>{scene.content}</Text>)}
 		</Box>
 	)
 };

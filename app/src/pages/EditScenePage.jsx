@@ -16,7 +16,10 @@ import {
 } from '@chakra-ui/react';
 
 import DraftApi from '../api/draftApi.ts';
-import { useParams } from 'react-router-dom';
+import {
+	useParams,
+	useLocation,
+} from 'react-router-dom';
 import { Plus, Save, ArrowDown} from 'react-feather'; // Import icons from the icon library
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -24,10 +27,12 @@ import {
 	setContent,
 	fetchDraftAsync,
 	selectTitle,
+	setIndex,
 } from '../reducers/editSceneReducer';
 
 const EditScenePage = () => {
 	const {id} = useParams();
+	const index = useLocation().state.index;
 	const dispatch = useDispatch();
 	const [loaded, setLoaded] = useState(false);
   const minimal = useSelector((state) => state.editScene.minimal);
@@ -36,8 +41,12 @@ const EditScenePage = () => {
   useEffect(() => {
 		dispatch(fetchDraftAsync(id)).then((_) => {
 			setLoaded(true);
+		}).then((_) => {
+			if(index != null){
+				dispatch(setIndex(index));
+			}
 		});
-  }, [id]);
+  }, [id, index]);
 
 	const [config, setConfig] = useState({
 		verticalPadding: 32,
