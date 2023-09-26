@@ -134,7 +134,11 @@ const editSceneSlice = createSlice({
       .addCase(createSceneAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
 				state.sceneIndex = action.payload.index;
-        state.draft.scenes.splice(state.sceneIndex, 0, action.payload.id);
+        state.draft.scenes.splice(state.sceneIndex, 0, {
+					id: action.payload.id,
+					title: 'Untitled',
+					content: '',
+				});
         state.draft = {
 					... state.draft,
 					scenes: state.draft.scenes,
