@@ -5,10 +5,15 @@ import {
   Text,
   VStack,
   Flex,
+  IconButton,
 	useTheme,
 } from '@chakra-ui/react';
+import {
+  useNavigate,
+} from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
-import { Edit2 } from 'react-feather';
+import { ArrowLeft, Edit2 } from 'react-feather';
+import SceneSection from '../components/SceneSection'
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchDraftAsync,
@@ -16,6 +21,7 @@ import {
 
 const DraftPage = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
   const draft = useSelector((state) => state.draft.data);
   const status = useSelector((state) => state.draft.status);
   const { id } = useParams();
@@ -30,31 +36,35 @@ const DraftPage = () => {
       {draft ? (
         <>
           <Flex alignItems="center" justifyContent="space-between">
-            <div>
-              <Heading size="xl">{draft.title}</Heading>
-              <Text fontSize="lg" color="gray.600">
-                {draft.description}
-              </Text>
-            </div>
-            <Link
-							to='edit'
-						>
+          	<Flex alignItems="center">
+							<IconButton 
+								onClick={() => {
+									navigate(-1);
+								}}>
+								<ArrowLeft/>
+							</IconButton>
+							<Box pl={8}>
+								<Heading size="lg">
+									{draft.title}
+								</Heading>
+								<Text fontSize="md" color="gray.600">
+									{draft.description}
+								</Text>
+							</Box>
+            </Flex>
+            <IconButton
+							onClick={() => {
+								navigate('edit');
+							}}>
 							<Edit2/>
-						</Link>
+						</IconButton>
           </Flex>
 
-          <VStack spacing={12} mt={4} align='stretch'>
+          <VStack spacing={4} mt={4} align='stretch'>
             {draft.scenes.map((scene, index) => (
-              <Box 
-								key={index} 
-								style={{
-									fontSize: '32px',
-									textAlign: 'justify',
-									border: 'none', 
-							}}>
-                <Heading size="lg" style={{textAlign: 'left'}}>{scene.title}</Heading>
-                <Text style={{whiteSpace: 'pre-wrap'}}>{scene.content}</Text>
-              </Box>
+              <SceneSection 
+								index={index} 
+								scene={scene}/>
             ))}
           </VStack>
         </>

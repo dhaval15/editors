@@ -51,6 +51,14 @@ const editSceneSlice = createSlice({
 		lastSave: null,
 	},
 	reducers: {
+		setIndex: (state, action) => {
+			if (state.content != null) {
+				state.message = 'Unsaved content';
+			}
+			else if (action.payload < state.draft.scenes.length){
+				state.sceneIndex = action.payload;
+			}
+		},
 		nextScene: (state, action) => {
 			if (state.content != null) {
 				state.message = 'Unsaved content';
@@ -75,13 +83,19 @@ const editSceneSlice = createSlice({
 			state.message = null;
 		},
 		clear: (state, action) => {
-			state.draft = null;
-			state.sceneIndex = null;
-			state.content = null;
-			localStorage.setItem('editorContent', null);
-			state.lastSave = null;
-			state.message = null;
-		},
+			if (state.content == null) {
+				state.draft = null;
+				state.sceneIndex = null;
+				state.content = null;
+				localStorage.setItem('editorContent', null);
+				state.lastSave = null;
+				state.message = null;
+				action.payload();
+			}
+			else {
+				state.message = 'Unsaved content';
+			}
+		}
 	},
   extraReducers: (builder) => {
     builder
@@ -120,7 +134,11 @@ const editSceneSlice = createSlice({
       .addCase(createSceneAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
 				state.sceneIndex = action.payload.index;
-        state.draft.scenes.splice(state.sceneIndex, 0, action.payload.id);
+        state.draft.scenes.splice(state.sceneIndex, 0, {
+					id: action.payload.id,
+					title: 'Untitled',
+					content: '',
+				});
         state.draft = {
 					... state.draft,
 					scenes: state.draft.scenes,
@@ -171,10 +189,12 @@ export const selectCurrentSceneContent = (state) => {
 
 export const {
 	setDraft, 
+	setIndex,
 	setContent,
 	nextScene,
 	previousScene,
 	clearMessage,
+	clear,
 } = editSceneSlice.actions;
 
 export default editSceneSlice.reducer;

@@ -57,7 +57,7 @@ const LookupDialog = ({ isOpen, onClose, onSearch }) => {
 						autoFocus
 						placeholder="Reverse lookup"
 						value={searchTerm}
-						onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+						onChange={(e) => dispatch(setSearchTerm({query: e.target.value}))}
 						onKeyDown={handleKeyDown}
 						variant="unstyled" 
 						pr="2.5rem" 

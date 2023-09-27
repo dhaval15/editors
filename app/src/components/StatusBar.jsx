@@ -6,7 +6,10 @@ import {
   IconButton,
   HStack,
 } from '@chakra-ui/react';
-import { Plus, Clock, List, ChevronLeft, ChevronRight, Settings, Save } from 'react-feather';
+import { Plus, Clock, List, ChevronLeft, ChevronRight, Settings, Save, Power} from 'react-feather';
+import {
+  useNavigate,
+} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/react'
 import {
@@ -18,6 +21,7 @@ import {
 	selectWordCount,
 	selectTitle,
 	clearMessage,
+	clear,
 } from '../reducers/editSceneReducer';
 
 const StatusBar = () => {
@@ -39,6 +43,14 @@ const StatusBar = () => {
 	const openScenesPopup = () => {};
 
 	const openSettings = () => {};
+
+	const navigate = useNavigate();
+	const exit = async () => {
+		const response = await dispatch(clear(() => {
+			navigate(-1);
+		}));
+		//console.log(response);
+	};
 
   return (
     <Box
@@ -78,6 +90,7 @@ const StatusBar = () => {
         <ChevronRight size={12} onClick={() => dispatch(nextScene())}/>
         <List size={12} onClick={openScenesPopup}/>
         <Settings size={12} onClick={openSettings}/>
+        <Power size={12} onClick={exit}/>
       </HStack>
     </Box>
   );
