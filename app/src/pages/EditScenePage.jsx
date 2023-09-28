@@ -51,7 +51,7 @@ const EditScenePage = () => {
 	const [config, setConfig] = useState({
 		verticalPadding: 32,
 		horizontalPadding: '200',
-		fontSize: 28,
+		fontSize: 26,
 		lineHeight: 1.5,
 		textAlign: 'justify',
 		fontFace: 'Baskerville',
@@ -85,9 +85,17 @@ const EditScenePage = () => {
 							<EditorConfigDialog onSave={(c) => setConfig(c)} initialConfig={config}/>
 						</ButtonGroup>
 					</Flex>)}
-					<Box flex="1" display="flex" height="100%" pb={minimal ? 0 : 8}>
+					<Flex 
+						style={{
+							justifyContent:"center",
+							width:"100%",
+							alignItems: "center",
+							flex: 1,
+						}}
+						px="0em"
+						pb={minimal ? 0 : 8}>
 						<Editor config={config}/>
-					</Box>
+					</Flex>
 					{(minimal && <StatusBar/>)}
 				</Flex>
 			</HotKeys>

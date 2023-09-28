@@ -76,11 +76,11 @@ const Editor = ({ config }) => {
 
 	useEffect(() => {
 		const dash = "-";
-		const emdash = "—"; // Shift+Option+Hyphen
+		const emdash = "—"; 
 		const element = textareaRef.current;
     
     if (!element) return;
- 
+
 		element.addEventListener( "keydown", handleKeydown, false );
  
 		function handleKeydown( event ) {
@@ -140,20 +140,21 @@ const Editor = ({ config }) => {
 				className="scroll"
 				placeholder="Start typing here ..."
 				ref={textareaRef}
+				id="mytextarea1"
+				px='1em'
+				py='4em'
 				style={{
 					fontSize: fontSize,
 					lineHeight: lineHeight,
 					fontFamily: fontFace,
-					padding: `${verticalPadding}px ${horizontalPadding}px`,
-					width: '100%', // Full width
-					height: '100%', // Full height
+					maxWidth: '30em',
+					height: '100%',
+					wrap: 'off',
 					boxSizing: 'border-box',
-					textAlign: textAlign
+					textAlign: textAlign,
 				}}
 				variant='unstyled'
 				resize="none" 
-				size="md" 
-				{... padding}
 			/>
 			<LookupDialog isOpen={isDialogOpen} onClose={closeDialog} />
 		</>

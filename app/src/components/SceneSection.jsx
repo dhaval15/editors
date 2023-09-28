@@ -17,7 +17,7 @@ const SceneSection = ({index, scene}) => {
 		<Box 
 			key={index} 
 			style={{
-				fontSize: '32px',
+				fontSize: 24,
 				textAlign: 'justify',
 				border: 'none', 
 		}}>
@@ -32,7 +32,7 @@ const SceneSection = ({index, scene}) => {
 					<Text> edit </Text>
 				</Link>)}
 			</Flex>
-			{(isExpanded && <Text pl={5} style={{whiteSpace: 'pre-wrap'}}>{scene.content}</Text>)}
+			{(isExpanded && <Text pl={0} style={{whiteSpace: 'pre-wrap'}}>{scene.content}</Text>)}
 		</Box>
 	)
 };

@@ -31,6 +31,7 @@ const StatusBar = () => {
   const wordCount = useSelector(selectWordCount);
 	const [isHovered, setIsHovered] = useState(false);
 	const [lastSavedTime, setLastSavedTime] = useState(null);
+	const fontSize = 15;
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -65,32 +66,32 @@ const StatusBar = () => {
       alignItems="center"
 			shadow="lg"
 			style={{
-  			opacity: isHovered ? 1 : 0.25,
+  			opacity: isHovered ? 1 : 0.3,
   			transition: 'opacity 1s',
 			}}
     >
       <HStack alignItems="center" spacing={4}>
-        <Text fontSize={12}>{title}</Text>
-        <Text fontSize={12}>Word Count: {wordCount}</Text>
+        <Text fontSize={fontSize}>{title}</Text>
+        <Text fontSize={fontSize}>Word Count: {wordCount}</Text>
 				<HStack>
-					<Clock size={12} />
-					<LiveClock/>
+					<Clock size={fontSize} />
+					<LiveClock fontSize={fontSize}/>
 				</HStack>
       </HStack>
       <HStack spacing={2}>
 				<ToastContainer/>
 				{(lastSavedTime && 
-					<Text fontSize={12}>
+					<Text fontSize={fontSize}>
 						{getTimeAgoString(lastSavedTime)}
         	</Text>
 				)}
-        <Save size={12} onClick={() => dispatch(saveContentAsync())}/>
-        <ChevronLeft size={12} onClick={() => dispatch(previousScene())}/>
-        <Plus size={12} onClick={() => dispatch(createSceneAsync())}/>
-        <ChevronRight size={12} onClick={() => dispatch(nextScene())}/>
-        <List size={12} onClick={openScenesPopup}/>
-        <Settings size={12} onClick={openSettings}/>
-        <Power size={12} onClick={exit}/>
+        <Save size={fontSize} onClick={() => dispatch(saveContentAsync())}/>
+        <ChevronLeft size={fontSize} onClick={() => dispatch(previousScene())}/>
+        <Plus size={fontSize} onClick={() => dispatch(createSceneAsync())}/>
+        <ChevronRight size={fontSize} onClick={() => dispatch(nextScene())}/>
+        <List size={fontSize} onClick={openScenesPopup}/>
+        <Settings size={fontSize} onClick={openSettings}/>
+        <Power size={fontSize} onClick={exit}/>
       </HStack>
     </Box>
   );
@@ -118,7 +119,7 @@ function getTimeAgoString(lastSavedTime) {
 	}
 }
 
-const LiveClock = () => {
+const LiveClock = ({fontSize}) => {
 	const [currentTime, setCurrentTime] = useState(getFormattedTime());
 
   useEffect(() => {
@@ -140,7 +141,7 @@ const LiveClock = () => {
   }
 
 	return (
-		<Text fontSize={12}>{currentTime}</Text>
+		<Text fontSize={fontSize}>{currentTime}</Text>
 	)
 };
 
