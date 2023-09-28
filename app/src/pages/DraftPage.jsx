@@ -32,46 +32,51 @@ const DraftPage = () => {
   }, [id]);
 
 	return (
-    <Box px={32} py={16}>
-      {draft ? (
-        <>
-          <Flex alignItems="center" justifyContent="space-between">
-          	<Flex alignItems="center">
-							<IconButton 
+    <Flex style = {{ 
+			width: "100%",
+			justifyContent: "center",
+		}} width="100%" justifyContent="center">
+			<Box maxWidth="40em" px="1em" py="2em">
+				{draft ? (
+					<>
+						<Flex alignItems="center" justifyContent="space-between">
+							<Flex alignItems="center">
+								<IconButton 
+									onClick={() => {
+										navigate(-1);
+									}}>
+									<ArrowLeft/>
+								</IconButton>
+								<Box pl={8}>
+									<Heading size="lg">
+										{draft.title}
+									</Heading>
+									<Text fontSize="md" color="gray.600">
+										{draft.description}
+									</Text>
+								</Box>
+							</Flex>
+							<IconButton
 								onClick={() => {
-									navigate(-1);
+									navigate('edit');
 								}}>
-								<ArrowLeft/>
+								<Edit2/>
 							</IconButton>
-							<Box pl={8}>
-								<Heading size="lg">
-									{draft.title}
-								</Heading>
-								<Text fontSize="md" color="gray.600">
-									{draft.description}
-								</Text>
-							</Box>
-            </Flex>
-            <IconButton
-							onClick={() => {
-								navigate('edit');
-							}}>
-							<Edit2/>
-						</IconButton>
-          </Flex>
+						</Flex>
 
-          <VStack spacing={4} mt={4} align='stretch'>
-            {draft.scenes.map((scene, index) => (
-              <SceneSection 
-								index={index} 
-								scene={scene}/>
-            ))}
-          </VStack>
-        </>
-      ) : (
-        <Text>Loading...</Text>
-      )}
-    </Box>
+						<VStack spacing={4} mt={4} align='stretch'>
+							{draft.scenes.map((scene, index) => (
+								<SceneSection 
+									index={index} 
+									scene={scene}/>
+							))}
+						</VStack>
+					</>
+				) : (
+					<Text>Loading...</Text>
+				)}
+			</Box>
+		</Flex>
   );
 };
 
