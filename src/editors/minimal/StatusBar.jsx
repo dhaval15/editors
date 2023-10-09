@@ -1,36 +1,21 @@
 import React, { useEffect, useState }from 'react';
 import {
   Box,
-  Flex,
   Text,
-  IconButton,
   HStack,
 } from '@chakra-ui/react';
 import { Plus, Clock, List, ChevronLeft, ChevronRight, Settings, Save, Power} from 'react-feather';
 import {
   useNavigate,
 } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { useToast } from '@chakra-ui/react'
-import {
-	setContent,
-	saveContentAsync,
-	nextScene,
-	previousScene,
-	createSceneAsync,
-	selectWordCount,
-	selectTitle,
-	clearMessage,
-	clear,
-} from '../reducers/editSceneReducer';
+import { ToastContainer } from './ToastContainer';
+import { selectWordCount } from '../../reducers/editorReducer';
+import { useSelector } from 'react-redux';
 
 const StatusBar = () => {
-	const dispatch = useDispatch();
-  const title = useSelector(selectTitle);
-  const sceneIndex = useSelector((state) => state.editScene.sceneIndex);
-  const wordCount = useSelector(selectWordCount);
 	const [isHovered, setIsHovered] = useState(false);
 	const [lastSavedTime, setLastSavedTime] = useState(null);
+	const wordCount = useSelector(selectWordCount);
 	const fontSize = 15;
 
   const handleMouseEnter = () => {
@@ -41,17 +26,10 @@ const StatusBar = () => {
     setIsHovered(false);
   };
 
-	const openScenesPopup = () => {};
 
 	const openSettings = () => {};
 
 	const navigate = useNavigate();
-	const exit = async () => {
-		const response = await dispatch(clear(() => {
-			navigate(-1);
-		}));
-		//console.log(response);
-	};
 
   return (
     <Box
@@ -71,7 +49,6 @@ const StatusBar = () => {
 			}}
     >
       <HStack alignItems="center" spacing={4}>
-        <Text fontSize={fontSize}>{title}</Text>
         <Text fontSize={fontSize}>Word Count: {wordCount}</Text>
 				<HStack>
 					<Clock size={fontSize} />
@@ -85,13 +62,8 @@ const StatusBar = () => {
 						{getTimeAgoString(lastSavedTime)}
         	</Text>
 				)}
-        <Save size={fontSize} onClick={() => dispatch(saveContentAsync())}/>
-        <ChevronLeft size={fontSize} onClick={() => dispatch(previousScene())}/>
-        <Plus size={fontSize} onClick={() => dispatch(createSceneAsync())}/>
-        <ChevronRight size={fontSize} onClick={() => dispatch(nextScene())}/>
-        <List size={fontSize} onClick={openScenesPopup}/>
+        <Save size={fontSize} onClick={() => console.log('Save')}/>
         <Settings size={fontSize} onClick={openSettings}/>
-        <Power size={fontSize} onClick={exit}/>
       </HStack>
     </Box>
   );
@@ -144,31 +116,5 @@ const LiveClock = ({fontSize}) => {
 		<Text fontSize={fontSize}>{currentTime}</Text>
 	)
 };
-
-const ToastContainer = () => {
-	const toast = useToast();
-	const dispatch = useDispatch();
-	const message = useSelector((state) => state.editScene.message);
-	const id = 'message-id';
-	useEffect(() => {
-		if (message != null && !toast.isActive(id))
-			toast({
-				id,
-				title: message,
-				position: 'top-right',
-				status: 'warning',
-				variant: 'subtle',
-				duration: 3000,
-				isClosable: true,
-				onCloseComplete: () => dispatch(clearMessage()),
-			});
-	}, [toast, message]);
-
-	return (
-		<>
-		</>
-	)
-};
-
 
 export default StatusBar;

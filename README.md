@@ -1,3 +1,5 @@
-# Draft
+# Editors
 
-A basic writer with no distraction and minimal features.
+A suite of editors for different purposes with
+a plugins for integrating backends of different 
+kinds

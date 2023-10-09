@@ -10,27 +10,20 @@ import {
   ListItem,
   Text,
 } from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { 
-	clearResults,
-	setSearchTerm,
-	reverseLookup 
-} from '../reducers/lookupReducer';
+
 
 const LookupDialog = ({ isOpen, onClose, onSearch }) => {
-	const dispatch = useDispatch();
-  const searchTerm = useSelector((state) => state.lookup.searchTerm);
-  const results = useSelector((state) => state.lookup.results);
-  const isLoading = useSelector((state) => state.lookup.isLoading);
+	const searchTerm = '';
+	const results = [];
 	const initialRef = React.useRef(null);
 	const [expandedIndex, setExpandedIndex] = useState(null);
 
   useEffect(() => {
 		if (!isOpen) {
-			dispatch(clearResults());
+			//dispatch(clearResults());
 			setExpandedIndex(null);
 		}
-  }, [isOpen, dispatch]);
+  }, [isOpen]);
 
 	const handleItemClick = (index) => {
     setExpandedIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -38,7 +31,7 @@ const LookupDialog = ({ isOpen, onClose, onSearch }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      dispatch(reverseLookup());
+      //dispatch(reverseLookup());
     }
   };
 
@@ -57,7 +50,7 @@ const LookupDialog = ({ isOpen, onClose, onSearch }) => {
 						autoFocus
 						placeholder="Reverse lookup"
 						value={searchTerm}
-						onChange={(e) => dispatch(setSearchTerm({query: e.target.value}))}
+						//onChange={(e) => dispatch(setSearchTerm({query: e.target.value}))}
 						onKeyDown={handleKeyDown}
 						variant="unstyled" 
 						pr="2.5rem" 

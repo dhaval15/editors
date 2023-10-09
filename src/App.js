@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import './App.css';
-import DashboardPage from './pages/DashboardPage';
-import EditScenePage from './pages/EditScenePage';
-import DraftPage from './pages/DraftPage';
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from 'react-redux';
 import store from './store';
 
 import {
   createMemoryRouter,
+  createHashRouter,
+	createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import TestEditor from './editors/TestEditor';
+import Minimal from './editors/minimal/Editor';
 
-const router = createMemoryRouter([
-  { path: "/", Component: DashboardPage },
-  { path: "/draft/:id", Component: DraftPage },
-  { path: "/draft/:id/edit", Component: EditScenePage },
+const router = createBrowserRouter([
+  { path: "/edit/test/:type", Component: TestEditor },
+  { path: "/edit/minimal/:type", Component: Minimal },
 ]);
 
 function App() {
